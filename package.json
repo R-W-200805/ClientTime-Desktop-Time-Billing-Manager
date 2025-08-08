@@ -1,0 +1,32 @@
+{
+    "name": "electron-customer-management",
+    "version": "1.0.0",
+    "description": "ניהול לקוחות באלקטרון",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-builder"
+    },
+    "dependencies": {
+        "better-sqlite3": "^11.7.0",
+        "electron-store": "^10.0.0",
+        "lowdb": "^7.0.1"
+    },
+    "devDependencies": {
+        "electron": "^33.2.1",
+        "electron-builder": "^24.13.3"
+    },
+    "build": {
+        "appId": "com.example.electron-customer-management",
+        "directories": {
+            "buildResources": "build",
+            "output": "dist"
+        },
+        "win": {
+            "target": "nsis",
+            "icon": "build/icon.ico"
+        }
+    },
+    "author": "",
+    "license": "ISC"
+}
