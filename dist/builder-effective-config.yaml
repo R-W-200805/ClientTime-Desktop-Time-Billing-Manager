@@ -1,9 +1,0 @@
-directories:
-  output: dist
-  buildResources: build
-appId: com.example.electron-customer-management
-win:
-  target: nsis
-  icon: build/icon.ico
-files: []
-electronVersion: 33.2.1
