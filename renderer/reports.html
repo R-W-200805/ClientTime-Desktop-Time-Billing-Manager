@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>דוחות</title>
+    <style>
+        /* שימוש בפונט המותאם באפליקציה */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            /* Removed overflow: hidden to allow scrolling */
+        }
+
+        /* סרגל עליון עם כפתורים */
+        .top-bar {
+            width: 100%;
+            height: 60px;
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .top-bar .nav-btn {
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            /* Medium */
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .top-bar .nav-btn:hover {
+            background-color: #357ab8;
+            transform: translateY(-2px);
+        }
+
+        /* כפתור איפוס */
+        .top-bar .reset-btn {
+            background-color: #dc3545;
+            /* אדום */
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            font-size: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .top-bar .reset-btn:hover {
+            background-color: #c82333;
+            /* גוון כהה יותר לאדום */
+            transform: translateY(-2px);
+        }
+
+        .main-container {
+            padding: 80px 20px 20px 20px;
+            /* Increased top padding to account for fixed header */
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-weight: 400;
+            /* Regular */
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 700;
+            /* Bold */
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            font-weight: 400;
+            /* Regular */
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            /* Medium */
+            margin-bottom: 8px;
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-weight: 400;
+            /* Regular */
+        }
+
+        .form-group .shortcuts {
+            margin-top: 10px;
+            font-weight: 400;
+            /* Regular */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .form-group .shortcuts button {
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            /* Medium */
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .form-group .shortcuts button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            display: inline-block;
+            /* inline-block to align side by side */
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            /* Bold */
+            text-align: center;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s, transform 0.2s;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .export-btn {
+            background-color: #17a2b8;
+            margin-right: 10px;
+            font-weight: 700;
+            /* Bold */
+        }
+
+        .export-btn:hover {
+            background-color: #117a8b;
+            transform: translateY(-2px);
+        }
+
+        .report-section {
+            margin-top: 30px;
+            font-weight: 400;
+            /* Regular */
+        }
+
+        .report-section h2 {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            /* SemiBold */
+        }
+
+        .summary {
+            font-size: 20px;
+            font-weight: 600;
+            /* SemiBold */
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-weight: 400;
+            /* Regular */
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            font-weight: 400;
+            /* Regular */
+        }
+
+        table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+            /* SemiBold */
+        }
+
+        /* הודעות */
+        #messageBox {
+            display: none;
+            /* מוסתר כברירת מחדל */
+            position: fixed;
+            /* ממוקם באופן יחסי לחלון הדפדפן */
+            top: 80px;
+            /* מרחק מהחלק העליון של המסך */
+            left: 50%;
+            /* ממורכז אופקית */
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            border-radius: 8px;
+            max-width: 80%;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+            /* Medium */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            opacity: 0;
+            z-index: 1002;
+        }
+
+        #messageBox.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* תגובות רספונסיביות */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 40%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: 50%;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                border-left: none;
+                border-top: 1px solid #ccc;
+            }
+
+            .detail-panel {
+                margin: 0;
+                height: 50%;
+                overflow-y: scroll;
+            }
+
+            .top-bar {
+                height: 50px;
+                padding: 0 10px;
+            }
+
+            .top-bar .nav-btn {
+                padding: 8px 12px;
+                font-size: 14px;
+                margin-left: 8px;
+            }
+
+            .sidebar-header h2 {
+                font-size: 16px;
+            }
+
+            .sidebar-header .add-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .form-group input[type="text"],
+            .form-group select {
+                padding: 8px;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            table th,
+            table td {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .action-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+        }
+
+        /* עיצוב פסי גלילה מותאמים אישית */
+        /* סגנונות עבור דפדפנים מבוססי WebKit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+    <!-- טעינת ספריות לייצוא -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <!-- סרגל עליון -->
+    <div class="top-bar">
+        <button class="nav-btn" onclick="navigateTo('index.html')" aria-label="אינדקס">אינדקס</button>
+        <button class="nav-btn" onclick="navigateTo('customers.html')" aria-label="לקוחות">לקוחות</button>
+        <button class="nav-btn" onclick="navigateTo('reports.html')" aria-label="דוחות">דוחות</button>
+    </div>
+
+    <div class="main-container">
+        <h1>דוחות</h1>
+
+        <div class="form-group">
+            <label for="customerSelect">בחר לקוח (לא חובה):</label>
+            <select id="customerSelect">
+                <option value="">כל הלקוחות</option>
+                <!-- לקוחות יטענו כאן דינאמית -->
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="startDate">מתאריך:</label>
+            <input type="text" id="startDate" placeholder="בחר תאריך התחלה">
+        </div>
+
+        <div class="form-group">
+            <label for="endDate">עד תאריך:</label>
+            <input type="text" id="endDate" placeholder="בחר תאריך סיום">
+        </div>
+
+        <div class="form-group shortcuts">
+            <button onclick="setShortcut('today')">היום</button>
+            <button onclick="setShortcut('yesterday')">אתמול</button>
+            <button onclick="setShortcut('week')">מתחילת שבוע</button>
+            <button onclick="setShortcut('month')">מתחילת חודש</button>
+            <button onclick="setShortcut('lastMonth')">חודש קודם</button>
+        </div>
+
+        <!-- כפתור לייצוא הדוח לאקסל -->
+        <div class="form-group">
+            <button class="btn export-btn" onclick="exportToExcel()">ייצוא לאקסל</button>
+            <button class="btn" onclick="generateReport()">הפק דוח</button>
+        </div>
+
+        <div id="reportContainer" class="report-section" style="display: none;">
+            <h2>דוח פעילות</h2>
+            <div class="summary" id="totalHours">סה"כ שעות עבודה: {סה"כ השעות}</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>זמן התחלה</th>
+                        <th>זמן סיום</th>
+                        <th>תיאור</th>
+                        <th>משך זמן (HH:MM:SS)</th>
+                    </tr>
+                </thead>
+                <tbody id="reportTableBody">
+                    <!-- נתונים יטענו כאן דינאמית -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- הודעות -->
+    <div id="messageBox"></div>
+
+    <script>
+        function showMessage(type, message) {
+            const messageBox = document.getElementById('messageBox');
+
+            messageBox.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+            messageBox.style.color = type === 'success' ? '#155724' : '#721c24';
+            messageBox.style.border = type === 'success' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+
+            messageBox.textContent = message;
+
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 5000);
+        }
+
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // טעינת לקוחות לתפריט הנבחר
+        async function loadCustomers() {
+            try {
+                const customers = await window.api.getCustomers();
+                console.log('לקוחות נטענו:', customers);
+                const select = document.getElementById('customerSelect');
+                select.innerHTML = '<option value="">כל הלקוחות</option>'; // אפשרות ברירת מחדל
+
+                customers.forEach(customer => {
+                    const option = document.createElement('option');
+                    option.value = customer.id;
+                    option.textContent = customer.name;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('שגיאה בטעינת הלקוחות:', error);
+                showMessage('error', 'שגיאה בטעינת הלקוחות.');
+            }
+        }
+
+        // קיצורי דרך לטווחי תאריכים
+        function setShortcut(range) {
+            const now = new Date();
+            let start, end;
+
+            switch (range) {
+                case 'today':
+                    start = end = now;
+                    break;
+                case 'yesterday':
+                    start = end = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+                    break;
+                case 'week':
+                    const dayOfWeek = now.getDay(); // 0-6
+                    start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek);
+                    end = now;
+                    break;
+                case 'month':
+                    start = new Date(now.getFullYear(), now.getMonth(), 1);
+                    end = now;
+                    break;
+                case 'lastMonth':
+                    start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    end = new Date(now.getFullYear(), now.getMonth(), 0);
+                    break;
+            }
+
+            document.getElementById('startDate').value = formatDate(start);
+            document.getElementById('endDate').value = formatDate(end);
+            console.log(`קיצור דרך ${range}: מתאריך ${formatDate(start)} עד ${formatDate(end)}`);
+        }
+
+        // פורמט תאריך ל-yyyy-mm-dd
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // הפקת דוח
+        async function generateReport() {
+            const customerId = document.getElementById('customerSelect').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (!startDate || !endDate) {
+                showMessage('error', 'יש לבחור טווח תאריכים');
+                return;
+            }
+
+            console.log(`הפקת דוח ללקוח ID: ${customerId}, מ-${startDate} עד ${endDate}`);
+
+            try {
+                const report = await window.api.generateReport({ customerId, startDate, endDate });
+                console.log('דוח שהתקבל:', report);
+
+                document.getElementById('totalHours').textContent = `סה"כ שעות עבודה: ${report.totalHours}`;
+
+                const tableBody = document.getElementById('reportTableBody');
+                tableBody.innerHTML = '';
+
+                const headerRow = document.querySelector('#reportContainer table thead tr');
+                if (!customerId) {
+                    headerRow.innerHTML = `
+            <th>שם לקוח</th>
+            <th>זמן התחלה</th>
+            <th>זמן סיום</th>
+            <th>תיאור</th>
+            <th>משך זמן</th>
+          `;
+                } else {
+                    headerRow.innerHTML = `
+            <th>זמן התחלה</th>
+            <th>זמן סיום</th>
+            <th>תיאור</th>
+            <th>משך זמן (HH:MM:SS)</th>
+          `;
+                }
+
+                // טעינת לקוחות במידה ואין סינון
+                let customerMap = {};
+                if (!customerId) {
+                    const customers = await window.api.getCustomers();
+                    customers.forEach(c => customerMap[c.id] = c.name);
+                }
+
+                report.sessions.forEach(session => {
+                    const duration = calculateDuration(session.startTime, session.endTime);
+                    const row = document.createElement('tr');
+                    if (!customerId) {
+                        row.innerHTML = `
+              <td>${customerMap[session.customerId] || 'לא ידוע'}</td>
+              <td>${new Date(session.startTime).toLocaleString()}</td>
+              <td>${new Date(session.endTime).toLocaleString()}</td>
+              <td>${session.description}</td>
+              <td>${duration}</td>
+            `;
+                    } else {
+                        row.innerHTML = `
+              <td>${new Date(session.startTime).toLocaleString()}</td>
+              <td>${new Date(session.endTime).toLocaleString()}</td>
+              <td>${session.description}</td>
+              <td>${duration}</td>
+            `;
+                    }
+                    tableBody.appendChild(row);
+                });
+
+                document.getElementById('reportContainer').style.display = 'block';
+                console.log('הדוח מוצג בהצלחה');
+            } catch (error) {
+                console.error('שגיאה בהפקת הדוח:', error);
+                showMessage('error', 'אירעה שגיאה בהפקת הדוח.');
+            }
+        }
+
+
+        // חישוב משך זמן בין startTime ל-endTime בפורמט HH:MM:SS
+        function calculateDuration(startTime, endTime) {
+            const start = new Date(startTime);
+            const end = new Date(endTime);
+            let diffInSeconds = Math.floor((end - start) / 1000);
+
+            const hours = String(Math.floor(diffInSeconds / 3600)).padStart(2, '0');
+            diffInSeconds %= 3600;
+            const minutes = String(Math.floor(diffInSeconds / 60)).padStart(2, '0');
+            const seconds = String(diffInSeconds % 60).padStart(2, '0');
+
+            const duration = `${hours}:${minutes}:${seconds}`;
+            console.log(`משך זמן: ${duration} בין ${startTime} ל-${endTime}`);
+            return duration;
+        }
+
+        // ייצוא הדוח לאקסל
+            async function exportToExcel() {
+    const customerId = document.getElementById('customerSelect').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            console.log('התחלת ייצוא לאקסל');
+
+            // אסוף את הנתונים לטבלה
+            const reportContainer = document.getElementById('reportContainer');
+            if (reportContainer.style.display === 'none') {
+                showMessage('error', 'יש להפק דוח לפני הייצוא.');
+            return;
+    }
+
+            const table = document.querySelector('#reportContainer table');
+
+            // יצירת ספר עבודה מתוך הטבלה
+            const wb = XLSX.utils.table_to_book(table, {sheet: "דוח פעילות" });
+
+            // הגדרת רוחב עמודות מותאם לכל עמודה
+            const ws = wb.Sheets["דוח פעילות"];
+            ws['!cols'] = [
+            {width: 20 },
+            {width: 20 },
+            {width: 30 },
+            {width: 15 },
+            {width: 15 }
+            ];
+
+            const reportMonth = new Date(startDate).toLocaleString('he-IL', {month: 'long', year: 'numeric' });
+            let filename = `${reportMonth}_דוח`;
+            if(customerId) {
+      const customers = await window.api.getCustomers();
+      const customer = customers.find(c => c.id == customerId);
+            if(customer) {
+                filename += `_${customer.name}`;
+      }
+    }
+            filename += `.xlsx`;
+
+            // שמירת הקובץ
+            XLSX.writeFile(wb, filename);
+            console.log(`דוח ייצא לאקסל בשם: ${filename}`);
+            showMessage('success', `הדוח ייצא בהצלחה כ-${filename}`);
+}
+
+    // טעינת לקוחות בעת טעינת הדף
+    document.addEventListener('DOMContentLoaded', loadCustomers);
+    </script>
+</body>
+
+</html>

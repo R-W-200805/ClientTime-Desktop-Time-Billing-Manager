@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אינדקס</title>
+    <link rel="stylesheet" href="assets/fonts/stylesheet.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* פונטים */
+        @font-face {
+            font-family: 'Open Sans';
+            src: url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* סרגל עליון עם כפתורים */
+        .top-bar {
+            width: 100%;
+            height: 60px;
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .top-bar .nav-btn {
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500; /* Medium */
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .top-bar .nav-btn:hover {
+            background-color: #357ab8;
+            transform: translateY(-2px);
+        }
+
+        /* כפתור איפוס */
+        .top-bar .reset-btn {
+            background-color: #dc3545; /* אדום */
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            font-size: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .top-bar .reset-btn:hover {
+            background-color: #c82333; /* גוון כהה יותר לאדום */
+            transform: translateY(-2px);
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 60px);
+            padding-top: 60px; /* בשביל הסרגל העליון */
+        }
+
+        /* צד ימין: רשימת לקוחות */
+        .sidebar {
+            width: 30%;
+            background: #ffffff;
+            border-left: 1px solid #ccc;
+            box-shadow: -1px 0 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .sidebar-header {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 500; /* Medium */
+        }
+
+        .sidebar-header .add-btn {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500; /* Medium */
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .sidebar-header .add-btn:hover {
+            background-color: #357ab8;
+            transform: translateY(-2px);
+        }
+
+        .customer-list {
+            list-style: none;
+            margin: 20px 0 0 0;
+            padding: 0;
+            flex: 1;
+        }
+
+        .customer-list li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            font-weight: 400; /* Regular */
+            transition: background 0.3s;
+        }
+
+        .customer-list li:hover {
+            background: #eef2f7;
+        }
+
+        .customer-list li.selected {
+            background: #d1e7fd;
+            font-weight: 600; /* SemiBold */
+        }
+
+        /* צד שמאל: פרטי לקוח */
+        .detail-panel {
+            flex: 1;
+            background: #ffffff;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            margin: 20px;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .detail-panel h1 {
+            margin-top: 0;
+            font-weight: 600; /* SemiBold */
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .form-group:last-child {
+            margin-right: 0;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500; /* Medium */
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .form-group input[type="text"], .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-weight: 400; /* Regular */
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input[type="text"]:focus, .form-group select:focus {
+            border-color: #4a90e2;
+            outline: none;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .btn {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-weight: 500; /* Medium */
+            transition: background-color 0.3s, transform 0.2s;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .btn:hover {
+            background-color: #357ab8;
+            transform: translateY(-2px);
+        }
+
+        /* טבלת חבילות */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-weight: 400; /* Regular */
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        table th {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px;
+            font-weight: 600; /* SemiBold */
+        }
+
+        table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            font-weight: 400; /* Regular */
+        }
+
+        /* כפתורי פעולה */
+        .action-btn {
+            padding: 5px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: 400; /* Regular */
+            transition: background-color 0.3s, transform 0.2s;
+            margin: 0 2px;
+        }
+
+        .edit-btn {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background-color: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* מודאלים */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 0;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            font-weight: 600; /* SemiBold */
+            color: #333;
+        }
+
+        .modal-content input[type="text"], .modal-content select {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-weight: 400; /* Regular */
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .modal-content input[type="text"]:focus, .modal-content select:focus {
+            border-color: #4a90e2;
+            outline: none;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500; /* Medium */
+            transition: background-color 0.3s, transform 0.2s;
+            margin: 0 5px;
+        }
+
+        .modal-buttons .confirm {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .modal-buttons .confirm:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .modal-buttons .cancel {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .modal-buttons .cancel:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* הודעות */
+        #messageBox {
+            display: none; /* מוסתר כברירת מחדל */
+            position: fixed; /* ממוקם באופן יחסי לחלון הדפדפן */
+            top: 80px; /* מרחק מהחלק העליון של המסך */
+            left: 50%; /* ממורכז אופקית */
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            border-radius: 8px;
+            max-width: 80%;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500; /* Medium */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            opacity: 0;
+            z-index: 1002;
+        }
+
+        #messageBox.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* תגובות רספונסיביות */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 40%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: 50%;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                border-left: none;
+                border-top: 1px solid #ccc;
+            }
+
+            .detail-panel {
+                margin: 0;
+                height: 50%;
+                overflow-y: scroll;
+            }
+
+            .top-bar {
+                height: 50px;
+                padding: 0 10px;
+            }
+
+            .top-bar .nav-btn {
+                padding: 8px 12px;
+                font-size: 14px;
+                margin-left: 8px;
+            }
+
+            .sidebar-header h2 {
+                font-size: 16px;
+            }
+
+            .sidebar-header .add-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .form-group input[type="text"], .form-group select {
+                padding: 8px;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            table th, table td {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .action-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+        }
+
+        /* עיצוב פסי גלילה מותאמים אישית */
+        /* סגנונות עבור דפדפנים מבוססי WebKit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- סרגל עליון -->
+    <div class="top-bar">
+        <button class="nav-btn" onclick="navigateTo('index.html')" aria-label="אינדקס">אינדקס</button>
+        <button class="nav-btn" onclick="navigateTo('customers.html')" aria-label="לקוחות">לקוחות</button>
+        <button class="nav-btn" onclick="navigateTo('reports.html')" aria-label="דוחות">דוחות</button>
+    </div>
+
+    <div class="main-container">
+        <!-- צד שמאל: פרטי לקוח -->
+        <div class="detail-panel" id="detailPanel">
+            <h1>פרטי לקוח</h1>
+            <p>בחר לקוח מרשימת הלקוחות בצד ימין.</p>
+        </div>
+
+        <!-- צד ימין: רשימת לקוחות -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>לקוחות</h2>
+                <button class="add-btn" onclick="openAddCustomerModal()">הוספת לקוח</button>
+            </div>
+            <ul class="customer-list" id="customerList"></ul>
+        </div>
+    </div>
+
+    <!-- מודאל הוספת לקוח -->
+    <div id="addCustomerModal" class="modal">
+      <div class="modal-content">
+        <h2>הוספת לקוח</h2>
+        <input type="text" id="newCustomerName" placeholder="שם" required>
+        <input type="text" id="newCustomerBusiness" placeholder="עסק">
+        <input type="text" id="newCustomerPhone" placeholder="טלפון">
+        <div class="modal-buttons">
+          <button class="confirm" onclick="confirmAddCustomer()">אישור</button>
+          <button class="cancel" onclick="closeAddCustomerModal()">ביטול</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- מודאל הוספת חבילה -->
+    <div id="addPackageModal" class="modal">
+      <div class="modal-content">
+        <h2>הוספת חבילה</h2>
+        <select id="newPackageMonthYear" placeholder="חודש"></select>
+        <input type="text" id="newPackageHours" placeholder="סה''כ שעות">
+        <input type="text" id="newPackageAmount" placeholder="סכום">
+        <div class="modal-buttons">
+          <button class="confirm" onclick="confirmAddPackage()">אישור</button>
+          <button class="cancel" onclick="closeAddPackageModal()">ביטול</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- מודאל עריכת חבילה -->
+    <div id="editPackageModal" class="modal">
+        <div class="modal-content">
+        <h2>עריכת חבילה</h2>
+        <select id="editPackageMonthYear"></select>
+        <input type="text" id="editPackageHours" placeholder="סה''כ שעות">
+        <input type="text" id="editPackageAmount" placeholder="סכום">
+        <div class="modal-buttons">
+            <button class="confirm" onclick="confirmEditPackage()">שמור</button>
+            <button class="cancel" onclick="closeEditPackageModal()">ביטול</button>
+        </div>
+        </div>
+    </div>
+
+    <!-- הודעות -->
+    <div id="messageBox"></div>
+
+    <script>
+        function showMessage(type, message) {
+            const messageBox = document.getElementById('messageBox');
+
+            messageBox.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+            messageBox.style.color = type === 'success' ? '#155724' : '#721c24';
+            messageBox.style.border = type === 'success' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+
+            messageBox.textContent = message;
+
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 5000);
+        }
+
+        let selectedCustomerId = null;
+        let currentPackageId = null;
+
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // פתיחת מודאל הוספת לקוח
+        function openAddCustomerModal() {
+            document.getElementById('addCustomerModal').style.display = 'flex';
+        }
+
+        // סגירת מודאל הוספת לקוח
+        function closeAddCustomerModal() {
+            document.getElementById('addCustomerModal').style.display = 'none';
+            document.getElementById('newCustomerName').value = '';
+            document.getElementById('newCustomerBusiness').value = '';
+            document.getElementById('newCustomerPhone').value = '';
+        }
+
+        // אישור הוספת לקוח
+        async function confirmAddCustomer() {
+            const name = document.getElementById('newCustomerName').value.trim();
+            const business = document.getElementById('newCustomerBusiness').value.trim();
+            const phone = document.getElementById('newCustomerPhone').value.trim();
+
+            if (!name) {
+                showMessage('error', 'יש להזין שם לקוח.');
+                return;
+            }
+
+            try {
+                console.log('Adding customer:', { name, business, phone });
+                await window.api.addCustomer({ name, business, phone });
+                showMessage('success', 'לקוח נוסף בהצלחה!');
+                closeAddCustomerModal();
+                loadCustomers(); // רענון הרשימה
+            } catch (error) {
+                console.error('Error adding customer:', error);
+                showMessage('error', 'שגיאה בעת הוספת הלקוח.');
+            }
+        }
+
+        // טעינת לקוחות
+        async function loadCustomers() {
+            try {
+                const customers = await window.api.getCustomers();
+                console.log('Loaded customers:', customers);
+                const customerList = document.getElementById('customerList');
+                customerList.innerHTML = '';
+
+                customers.forEach(customer => {
+                    const li = document.createElement('li');
+                    li.textContent = customer.name;
+                    li.setAttribute('data-id', customer.id);
+                    li.addEventListener('click', () => selectCustomer(customer.id));
+                    if (customer.id === selectedCustomerId) {
+                        li.classList.add('selected');
+                    }
+                    customerList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error loading customers:', error);
+                showMessage('error', 'שגיאה בטעינת רשימת הלקוחות.');
+            }
+        }
+
+        // בחירת לקוח והצגת פרטים
+        async function selectCustomer(id) {
+            selectedCustomerId = id;
+            document.querySelectorAll('#customerList li').forEach(li => {
+                li.classList.toggle('selected', li.getAttribute('data-id') == id);
+            });
+
+            try {
+                const customers = await window.api.getCustomers();
+                const customer = customers.find(c => c.id === id);
+
+                if (!customer) {
+                    console.error('Customer not found:', id);
+                    return;
+                }
+
+                console.log('Selected customer:', customer);
+
+                const detailPanel = document.getElementById('detailPanel');
+                detailPanel.innerHTML = `
+                    <h1>פרטי לקוח</h1>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>שם:</label>
+                            <input type="text" id="editCustomerName" value="${customer.name}">
+                        </div>
+                        <div class="form-group">
+                            <label>עסק:</label>
+                            <input type="text" id="editCustomerBusiness" value="${customer.business || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label>טלפון:</label>
+                            <input type="text" id="editCustomerPhone" value="${customer.phone || ''}">
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn" onclick="updateCustomer()">עדכן לקוח</button>
+                        <button class="btn" style="background-color:#dc3545;" onclick="deleteCustomer()">מחק לקוח</button>
+                    </div>
+                    <h2>חבילות</h2>
+                    <button class="btn" style="margin-top:10px;" onclick="openAddPackageModal()">הוסף חבילה</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>חודש-שנה</th>
+                                <th>סה''כ שעות</th>
+                                <th>סכום</th>
+                                <th>פעולות</th>
+                            </tr>
+                        </thead>
+                        <tbody id="packageTableBody"></tbody>
+                    </table>
+                `;
+
+                loadPackages();
+            } catch (error) {
+                console.error('Error selecting customer:', error);
+                showMessage('error', 'שגיאה בעת בחירת הלקוח.');
+            }
+        }
+
+        // עידכון לקוח
+        async function updateCustomer() {
+            const name = document.getElementById('editCustomerName').value.trim();
+            const business = document.getElementById('editCustomerBusiness').value.trim();
+            const phone = document.getElementById('editCustomerPhone').value.trim();
+
+            if (!name) {
+                showMessage('error', 'יש להזין שם לקוח.');
+                return;
+            }
+
+            try {
+                console.log('Updating customer:', { id: selectedCustomerId, name, business, phone });
+                await window.api.updateCustomer({ id: selectedCustomerId, name, business, phone });
+                showMessage('success', 'הלקוח עודכן בהצלחה!');
+                loadCustomers(); // רענון הרשימה
+                selectCustomer(selectedCustomerId); // רענון פרטי הלקוח
+            } catch (error) {
+                console.error('Error updating customer:', error);
+                showMessage('error', 'שגיאה בעת עדכון הלקוח.');
+            }
+        }
+
+        // מחיקת לקוח
+        async function deleteCustomer() {
+            if (!selectedCustomerId) {
+                showMessage('error', 'אין לקוח שנבחר למחיקה.');
+                return;
+            }
+
+            if (confirm('האם אתה בטוח שברצונך למחוק את הלקוח? פעולה זו תמחק גם את כל החבילות ויחידות העבודה שלו.')) {
+                try {
+                    console.log('Deleting customer with ID:', selectedCustomerId);
+                    await window.api.deleteCustomer(selectedCustomerId);
+                    showMessage('success', 'הלקוח נמחק בהצלחה!');
+                    selectedCustomerId = null;
+                    document.getElementById('detailPanel').innerHTML = `
+                        <h1>פרטי לקוח</h1>
+                        <p>בחר לקוח מרשימת הלקוחות בצד ימין.</p>
+                    `;
+                    loadCustomers(); // רענון הרשימה
+                } catch (error) {
+                    console.error('Error deleting customer:', error);
+                    showMessage('error', 'שגיאה בעת מחיקת הלקוח.');
+                }
+            }
+        }
+
+        // טעינת חבילות ללקוח הנבחר
+        async function loadPackages() {
+            if (!selectedCustomerId) return;
+
+            try {
+                const packages = await window.api.getPackages(selectedCustomerId);
+                console.log(`Loaded packages for customer ${selectedCustomerId}:`, packages);
+                const packageTableBody = document.getElementById('packageTableBody');
+                packageTableBody.innerHTML = '';
+
+                packages.forEach(pkg => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${pkg.monthYear}</td>
+                        <td>${pkg.totalHours}</td>
+                        <td>${pkg.amount}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editPackage(${pkg.id})">ערוך</button>
+                            <button class="action-btn delete-btn" onclick="deletePackage(${pkg.id})">מחק</button>
+                        </td>
+                    `;
+                    packageTableBody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Error loading packages:', error);
+                showMessage('error', 'שגיאה בטעינת החבילות.');
+            }
+        }
+
+        // פתיחת מודאל הוספת חבילה
+        function openAddPackageModal() {
+            populateMonthYearSelect('newPackageMonthYear');
+            document.getElementById('addPackageModal').style.display = 'flex';
+        }
+
+        // סגירת מודאל הוספת חבילה
+        function closeAddPackageModal() {
+            document.getElementById('addPackageModal').style.display = 'none';
+            document.getElementById('newPackageMonthYear').value = '';
+            document.getElementById('newPackageHours').value = '';
+            document.getElementById('newPackageAmount').value = '';
+        }
+
+        // אישור הוספת חבילה
+        async function confirmAddPackage() {
+            const monthYear = document.getElementById('newPackageMonthYear').value.trim();
+            const totalHours = document.getElementById('newPackageHours').value.trim();
+            const amount = document.getElementById('newPackageAmount').value.trim();
+
+            if (!monthYear || !totalHours || !amount) {
+                showMessage('error', 'יש למלא את כל השדות');
+                return;
+            }
+
+            try {
+                console.log('Adding package:', { customerId: selectedCustomerId, monthYear, totalHours, amount });
+                await window.api.addPackage({ customerId: selectedCustomerId, monthYear, totalHours, amount });
+                showMessage('success', 'חבילה נוספה בהצלחה!');
+                closeAddPackageModal();
+                loadPackages();
+            } catch (error) {
+                console.error('Error adding package:', error);
+                showMessage('error', 'שגיאה בעת הוספת החבילה.');
+            }
+        }
+
+        // פתיחת מודאל עריכת חבילה
+        async function editPackage(id) {
+            try {
+                const packages = await window.api.getPackages(selectedCustomerId);
+                const pkg = packages.find(p => p.id === id);
+                if (!pkg) {
+                    console.error('Package not found:', id);
+                    return;
+                }
+
+                console.log('Editing package:', pkg);
+                openEditPackageModal(pkg.id, pkg.monthYear, pkg.totalHours, pkg.amount);
+            } catch (error) {
+                console.error('Error fetching package for edit:', error);
+                showMessage('error', 'שגיאה בעת שליפת נתוני החבילה לעריכה.');
+            }
+        }
+
+        // פתיחת מודאל עריכת חבילה
+        function openEditPackageModal(packageId, monthYear, totalHours, amount) {
+            currentPackageId = packageId;
+            populateMonthYearSelect('editPackageMonthYear');
+
+            document.getElementById('editPackageMonthYear').value = monthYear;
+            document.getElementById('editPackageHours').value = totalHours;
+            document.getElementById('editPackageAmount').value = amount;
+
+            document.getElementById('editPackageModal').style.display = 'flex';
+        }
+
+        // סגירת מודאל עריכת חבילה
+        function closeEditPackageModal() {
+            document.getElementById('editPackageModal').style.display = 'none';
+            currentPackageId = null;
+            document.getElementById('editPackageMonthYear').value = '';
+            document.getElementById('editPackageHours').value = '';
+            document.getElementById('editPackageAmount').value = '';
+        }
+
+        // אישור עריכת חבילה
+        async function confirmEditPackage() {
+            const monthYear = document.getElementById('editPackageMonthYear').value.trim();
+            const totalHours = document.getElementById('editPackageHours').value.trim();
+            const amount = document.getElementById('editPackageAmount').value.trim();
+
+            if (!monthYear || !totalHours || !amount) {
+                showMessage('error', 'יש למלא את כל השדות');
+                return;
+            }
+
+            try {
+                console.log('Updating package:', { id: currentPackageId, customerId: selectedCustomerId, monthYear, totalHours, amount });
+                await window.api.updatePackage({ id: currentPackageId, customerId: selectedCustomerId, monthYear, totalHours, amount });
+                showMessage('success', 'החבילה עודכנה בהצלחה!');
+                closeEditPackageModal();
+                loadPackages();
+            } catch (error) {
+                console.error('Error updating package:', error);
+                showMessage('error', 'שגיאה בעת עדכון החבילה.');
+            }
+        }
+
+        // מחיקת חבילה
+        async function deletePackage(id) {
+            if (confirm('למחוק את החבילה?')) {
+                try {
+                    console.log('Deleting package with ID:', id);
+                    await window.api.deletePackage(id);
+                    showMessage('success', 'החבילה נמחקה בהצלחה!');
+                    loadPackages();
+                } catch (error) {
+                    console.error('Error deleting package:', error);
+                    showMessage('error', 'שגיאה בעת מחיקת החבילה.');
+                }
+            }
+        }
+
+        // Populate the dropdown for month-year selection
+        function populateMonthYearSelect(selectId) {
+            const select = document.getElementById(selectId);
+            if (!select) return;
+
+            select.innerHTML = ''; // Clear existing options
+            const now = new Date();
+            now.setMonth(now.getMonth() - 1); // Start from previous month
+
+            const startYear = now.getFullYear();
+            const startMonth = now.getMonth();
+            const endYear = startYear + 1;
+            const endMonth = 11;
+
+            let currentYear = startYear;
+            let currentMonth = startMonth;
+
+            while (currentYear < endYear || (currentYear === endYear && currentMonth <= endMonth)) {
+                const monthNum = (currentMonth + 1).toString().padStart(2, '0');
+                const optionText = `${monthNum}-${currentYear}`;
+                const option = document.createElement('option');
+                option.value = optionText;
+                option.textContent = optionText;
+                select.appendChild(option);
+
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+            }
+        }
+
+        // פונקציה לקבלת שם לקוח לפי ID (סינכרונית)
+        function getCustomerNameByIdSync(id) {
+            const customerList = document.getElementById('customerList').children;
+            for (let li of customerList) {
+                // כאן אנו מניחים שכל שם לקוח ייחודי
+                if (li.getAttribute('data-id') == id) {
+                    return li.textContent;
+                }
+            }
+            return '';
+        }
+
+        // פונקציה לניהול מודאל האיפוס
+        function openResetModal() {
+            // מודאל האיפוס כבר מוגדר ב-HTML
+            const modal = document.getElementById('resetModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeResetModal() {
+            const resetModal = document.getElementById('resetModal');
+            if (resetModal) {
+                resetModal.style.display = 'none';
+                document.getElementById('resetCodeInput').value = '';
+            }
+        }
+
+        async function confirmReset() {
+            const code = document.getElementById('resetCodeInput').value.trim();
+            if (code === '') {
+                showMessage('error', 'אנא הזן קוד.');
+                return;
+            }
+
+            try {
+                const response = await window.api.resetExpiration(code);
+                if (response.success) {
+                    showMessage('success', response.message);
+                } else {
+                    showMessage('error', response.message);
+                }
+            } catch (error) {
+                console.error('Error resetting expiration:', error);
+                showMessage('error', 'אירעה שגיאה בעת איפוס התוקף.');
+            }
+
+            closeResetModal();
+        }
+
+        // סגירת מודאלים בלחיצה מחוץ להם
+        window.onclick = function(event) {
+            const addCustomerModal = document.getElementById('addCustomerModal');
+            const addPackageModal = document.getElementById('addPackageModal');
+            const editPackageModal = document.getElementById('editPackageModal');
+            const resetModal = document.getElementById('resetModal');
+
+            if (event.target === addCustomerModal) closeAddCustomerModal();
+            if (event.target === addPackageModal) closeAddPackageModal();
+            if (event.target === editPackageModal) closeEditPackageModal();
+            if (event.target === resetModal) closeResetModal();
+        };
+
+        // Event listener for DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadCustomers();
+        });
+    </script>
+</body>
+</html>
